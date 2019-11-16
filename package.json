@@ -1,6 +1,6 @@
 {
-  "name": "scrape-jobs",
-  "version": "1.0.0",
+  "name": "loan-risk-score",
+  "version": "1.0.1",
   "description": "Calculate loan affordability using machine learning.",
   "main": "scraper/scrape-jobs.js",
   "keywords": [
