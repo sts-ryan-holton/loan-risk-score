@@ -5,7 +5,13 @@ This project uses machine learning [neural networks](https://en.wikipedia.org/wi
 
 ## :star2: Demo
 
-Coming soon...
+**[See it in action](https://sts-ryan-holton.github.io/loan-risk-score/)**
+
+#### :wrench: Param options
+
+- `?enable_seed_data=true` - pass this to generate random data to test the system.
+- `?enable_logs=true` - pass this to get real-time console updates as Brain JS learns your data.
+- `?enable_risk_factor_logging=true` - pass this to see your individual risk factors, logged to the console.
 
 
 ## :bulb: How it works
@@ -46,20 +52,20 @@ Install the scraper, you need **Node JS 10 or greater**
 
 ``` bash
 # clone project
-$ git clone git@github.com:team8digital/llcV2.git
+$ git clone git@github.com:sts-ryan-holton/loan-risk-score.git
 
 # install dependencies.
 $ npm install
 ```
 
-### Starting
+### :wrench: Starting
 
 ``` bash
 # start scraping
 $ node scraper/scrape-jobs.js
 ```
 
-### Starting - With options
+### :wrench: Starting - With options
 
 ``` bash
 # start scraping with options (you can pass all, or some of the following with number format)
