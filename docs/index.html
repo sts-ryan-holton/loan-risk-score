@@ -23,13 +23,19 @@
       .is-spaced-bottom-small {
         margin-bottom: .5rem;
       }
+      .is-spaced-bottom-large {
+        margin-bottom: 3rem;
+      }
       .is-spaced-top-small {
         margin-top: .5rem;
       }
       .progress-ring__circle {
+        -webkit-transition: 0.35s stroke-dashoffset;
         transition: 0.35s stroke-dashoffset;
-        transform: rotate(-90deg);
-        transform-origin: 50% 50%;
+        -webkit-transform: rotate(-90deg);
+                transform: rotate(-90deg);
+        -webkit-transform-origin: 50% 50%;
+                transform-origin: 50% 50%;
       }
       .progress-result-box {
         position: absolute;
@@ -44,6 +50,14 @@
       }
       .progress-ring-result {
         position: relative;
+      }
+      .score-theme circle {
+        -webkit-transition: fill .5s ease, stroke .5s ease;
+                transition: fill .5s ease, stroke .5s ease;
+      }
+      .score-details *[class^="score-theme--"] {
+        -webkit-transition: color .5s ease, color .5s ease;
+                transition: color .5s ease, color .5s ease;
       }
       .score-theme.score-theme--default circle {
         fill: #E1F5FE;
@@ -87,15 +101,15 @@
       <div class="container">
         <div class="columns">
           <div class="column has-text-centered">
-            <h1 class="title">
+            <h1 class="title is-size-4">
               Loan Affordability Score <span class="tag is-warning is-light">Beta</span>
             </h1>
-            <p class="subtitle is-spaced-bottom">
+            <p class="subtitle is-size-6 is-spaced-bottom">
               get your FREE <strong>risk score</strong>
             </p>
           </div>
         </div>
-        <div class="columns is-centered">
+        <div class="columns is-centered is-spaced-bottom-large">
           <div class="column is-4">
             <form v-show="!risk.isLoading">
               <div class="field">
@@ -171,6 +185,7 @@
                 <p class="is-size-7 has-text-grey has-text-weight-light is-spaced-bottom-small">
                   this could take a while, please wait...
                 </p>
+                <progress class="progress is-small is-primary" max="100">15%</progress>
               </div>
               <div v-show="risk.hasResult">
                 <h4 class="is-size-5 has-text-black has-text-weight-normal">Your Risk Score</h4>
@@ -202,13 +217,20 @@
             </div>
           </div>
         </div>
+        <div class="columns is-centered">
+          <div class="column is-4 has-text-left">
+            <p class="s-size-7 has-text-weight-normal has-text-grey-light">
+              <small>Version: 1.0.1, <a href="https://github.com/sts-ryan-holton/loan-risk-score#moneybag-loan-affordability-risk-score" target="_blank">documentation</a></small>
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- JS -->
-    <script src="https://unpkg.com/brain.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
+    <script src="https://unpkg.com/brain.js@2.0.0-alpha.9/dist/brain-browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10"></script>
+    <script src="https://unpkg.com/vue-router@3.1.3/dist/vue-router.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
     <script>
       const router = new VueRouter({
@@ -306,7 +328,7 @@
             this.risk.isCalculating = true
             setTimeout(() => {
               this.risk.isLoading = true
-            }, 2000);
+            }, 500);
 
             var circle = document.querySelector('circle');
             var radius = circle.r.baseVal.value;
@@ -433,7 +455,7 @@
                   self.risk.scoreName = 'bad'
                 }
               }
-            }, 3000);
+            }, 4000);
 
             if (this.$route.query.enable_risk_factor_logging) {
               console.log('Risk Factor Salary: ', salaryRisk)
