@@ -1,0 +1,20 @@
+{
+  "name": "scrape-jobs",
+  "version": "1.0.0",
+  "description": "Calculate loan affordability using machine learning.",
+  "main": "scraper/scrape-jobs.js",
+  "keywords": [
+    "scraper",
+    "data",
+    "business"
+  ],
+  "author": "Ryan Holton",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "1.0.0-rc.3",
+    "minimist": "1.2.0",
+    "osx-temperature-sensor": "1.0.4",
+    "puppeteer": "2.0.0",
+    "systeminformation": "4.15.3"
+  }
+}
