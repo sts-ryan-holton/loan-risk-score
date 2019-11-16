@@ -31,6 +31,17 @@
         transform: rotate(-90deg);
         transform-origin: 50% 50%;
       }
+      .progress-result-box {
+        position: absolute;
+        top: 3.4em;
+        right: 0;
+        left: 0;
+        margin: auto;
+      }
+      .progress-result-box span {
+        margin-top: -.25em;
+        display: inherit;
+      }
       .progress-ring-result {
         position: relative;
       }
@@ -38,21 +49,36 @@
         fill: #E1F5FE;
         stroke: #4FC3F7;
       }
+      .score-details .score-theme--default {
+        color: #4FC3F7;
+      }
       .score-theme.score-theme--bad circle {
         fill: #FFCDD2;
         stroke: #E57373;
+      }
+      .score-details .score-theme--bad {
+        color: #E57373;
       }
       .score-theme.score-theme--average circle {
         fill: #FFF8E1;
         stroke: #FFD54F;
       }
+      .score-details .score-theme--average {
+        color: #FFD54F;
+      }
       .score-theme.score-theme--good circle {
         fill: #F1F8E9;
         stroke: #AED581;
       }
+      .score-details .score-theme--good {
+        color: #AED581;
+      }
       .score-theme.score-theme--excellent circle {
         fill: #E0F2F1;
         stroke: #4DB6AC;
+      }
+      .score-details .score-theme--excellent {
+        color: #4DB6AC;
       }
     </style>
 
@@ -149,7 +175,7 @@
               <div v-show="risk.hasResult">
                 <h4 class="is-size-5 has-text-black has-text-weight-normal">Your Risk Score</h4>
                 <p class="is-size-7 has-text-grey has-text-weight-light is-spaced-bottom-small">
-                  (higher = better)
+                  (higher = better, 500 max)
                 </p>
                 <div class="progress-ring-result">
                   <svg
@@ -167,6 +193,10 @@
                         cx="80"
                         cy="80"/>
                   </svg>
+                  <div class="progress-result-box has-text-centered score-details">
+                    <h5 class="is-size-5 has-text-weight-bold" :class="risk.theme">{{ risk.scoreShown }}</h5>
+                    <span class="is-size-7 has-text-weight-medium is-uppercase" :class="risk.theme">{{ risk.scoreName }}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -195,7 +225,7 @@
           riskFactors: {
             loan: 0,
             term: 0,
-            salary: 0,
+            salary: 1592,
             credit: 0,
             dependants: 0
           },
@@ -204,6 +234,8 @@
             isCalculating: false,
             hasResult: false,
             score: 0,
+            scoreShown: 000,
+            scoreName: 'bad',
             theme: 'score-theme--default'
           }
         },
@@ -376,6 +408,7 @@
 
                 // fill the circle
                 if (fillRiskCircle < self.risk.score) {
+                  self.risk.scoreShown = fillRiskCircle++
                   fillRiskCircle++
                   setProgress(fillRiskCircle / 5)
                 } else {
@@ -385,14 +418,19 @@
                 // add the theme
                 if ((fillRiskCircle / 5) < 25) {
                   self.risk.theme = 'score-theme--bad'
+                  self.risk.scoreName = 'bad'
                 } else if ((fillRiskCircle / 5) > 24 && (fillRiskCircle / 5) < 55) {
                   self.risk.theme = 'score-theme--average'
+                  self.risk.scoreName = 'average'
                 } else if ((fillRiskCircle / 5) > 55 && (fillRiskCircle / 5) < 70) { // 25 or less (125 equv)
                   self.risk.theme = 'score-theme--good'
+                  self.risk.scoreName = 'good'
                 } else if ((fillRiskCircle / 5) > 70) {
                   self.risk.theme = 'score-theme--excellent'
+                  self.risk.scoreName = 'excellent'
                 } else {
                   self.risk.theme = 'score-theme--default'
+                  self.risk.scoreName = 'bad'
                 }
               }
             }, 3000);
