@@ -12,6 +12,7 @@ This project uses machine learning [neural networks](https://en.wikipedia.org/wi
 - `?enable_seed_data=true` - pass this to generate random data to test the system.
 - `?enable_logs=true` - pass this to get real-time console updates as Brain JS learns your data.
 - `?enable_risk_factor_logging=true` - pass this to see your individual risk factors, logged to the console.
+- `?salary=500` - pass a `number` as a salary to set salary on page load.
 
 
 ## :bulb: How it works
