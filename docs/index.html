@@ -282,6 +282,10 @@
             this.riskFactors.dependants = this.randomFromArray([1, 0])
           }
 
+          if (this.$route.query.salary) {
+            this.riskFactors.salary = parseInt(this.$route.query.salary)
+          }
+
         },
         methods: {
 
