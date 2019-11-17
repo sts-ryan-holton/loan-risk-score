@@ -112,72 +112,79 @@
         <div class="columns is-centered is-spaced-bottom-large">
           <div class="column is-4">
             <form v-show="!risk.isLoading">
-              <div class="field">
-                <label class="label">How much would you like to borrow?</label>
-                <div class="control has-icons-left">
-                  <div class="select w-100">
-                    <select v-model="riskFactors.loan" class="w-100">
-                      <option v-for="loan in setData.loan" :value="loan.key">
-                        {{ loan.value }}
-                      </option>
-                    </select>
-                  </div>
-                  <div class="icon is-small is-left">
-                    <i class="fas fa-pound-sign"></i>
-                  </div>
-                </div>
-              </div>
-              <div class="field">
-                <label class="label">And, for how long?</label>
-                <div class="control has-icons-left">
-                  <div class="select w-100">
-                    <select v-model="riskFactors.term" class="w-100" required>
-                      <option v-for="term in setData.term" :value="term.key">
-                        {{ term.value }}
-                      </option>
-                    </select>
-                  </div>
-                  <div class="icon is-small is-left">
-                    <i class="fas fa-calendar"></i>
+              <div v-if="!setData.reachedLimit">
+                <div class="field">
+                  <label class="label">How much would you like to borrow?</label>
+                  <div class="control has-icons-left">
+                    <div class="select w-100">
+                      <select v-model="riskFactors.loan" class="w-100">
+                        <option v-for="loan in setData.loan" :value="loan.key">
+                          {{ loan.value }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="icon is-small is-left">
+                      <i class="fas fa-pound-sign"></i>
+                    </div>
                   </div>
                 </div>
+                <div class="field">
+                  <label class="label">And, for how long?</label>
+                  <div class="control has-icons-left">
+                    <div class="select w-100">
+                      <select v-model="riskFactors.term" class="w-100" required>
+                        <option v-for="term in setData.term" :value="term.key">
+                          {{ term.value }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="icon is-small is-left">
+                      <i class="fas fa-calendar"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label">What's your monthly take-home pay?</label>
+                  <div class="control has-icons-left">
+                    <input v-model="riskFactors.salary" class="input" type="number" placeholder="1200" required>
+                    <span class="icon is-small is-left">
+                      <i class="fas fa-calculator"></i>
+                    </span>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label">Any outstanding credit?</label>
+                  <div class="control">
+                    <label class="radio">
+                      <input v-model="riskFactors.credit" type="radio" name="credit" value="1">
+                      Yes
+                    </label>
+                    <label class="radio">
+                      <input v-model="riskFactors.credit" type="radio" name="credit" value="0">
+                      No
+                    </label>
+                  </div>
+                </div>
+                <div class="field is-spaced-bottom">
+                  <label class="label">Any dependants?</label>
+                  <div class="control">
+                    <label class="radio">
+                      <input v-model="riskFactors.dependants" type="radio" name="dependants" value="1">
+                      Yes
+                    </label>
+                    <label class="radio">
+                      <input v-model="riskFactors.dependants" type="radio" name="dependants" value="0">
+                      No
+                    </label>
+                  </div>
+                </div>
+                <button @click="getRiskScore" type="button" class="button is-primary" :class="{ 'is-loading': risk.isCalculating }" :disabled="risk.isCalculating || preventGettingScore">Get my <strong>&nbsp;FREE&nbsp;</strong> risk score</button>
               </div>
-              <div class="field">
-                <label class="label">What's your monthly take-home pay?</label>
-                <div class="control has-icons-left">
-                  <input v-model="riskFactors.salary" class="input" type="number" placeholder="1200" required>
-                  <span class="icon is-small is-left">
-                    <i class="fas fa-calculator"></i>
-                  </span>
+              <div v-else>
+                <div class="notification is-info">
+                  You've reached the limit for receiving your <strong>Risk Score.</strong> Please navigate to a different website, and return to this page, or close your browser and re-open.
                 </div>
               </div>
-              <div class="field">
-                <label class="label">Any outstanding credit?</label>
-                <div class="control">
-                  <label class="radio">
-                    <input v-model="riskFactors.credit" type="radio" name="credit" value="1">
-                    Yes
-                  </label>
-                  <label class="radio">
-                    <input v-model="riskFactors.credit" type="radio" name="credit" value="0">
-                    No
-                  </label>
-                </div>
-              </div>
-              <div class="field is-spaced-bottom">
-                <label class="label">Any dependants?</label>
-                <div class="control">
-                  <label class="radio">
-                    <input v-model="riskFactors.dependants" type="radio" name="dependants" value="1">
-                    Yes
-                  </label>
-                  <label class="radio">
-                    <input v-model="riskFactors.dependants" type="radio" name="dependants" value="0">
-                    No
-                  </label>
-                </div>
-              </div>
-              <button @click="getRiskScore" type="button" class="button is-primary" :class="{ 'is-loading': risk.isCalculating }" :disabled="risk.isCalculating || preventGettingScore">Get my <strong>&nbsp;FREE&nbsp;</strong> risk score</button>
             </form>
             <div v-show="risk.isLoading" class="has-text-centered">
               <div v-show="!risk.hasResult">
@@ -242,7 +249,9 @@
         data: {
           setData: {
             loan: [],
-            term: []
+            term: [],
+            scoreAttempts: 0,
+            reachedLimit: false
           },
           riskFactors: {
             loan: 0,
@@ -262,6 +271,14 @@
           }
         },
         mounted () {
+
+          if (sessionStorage.getItem('risk-score-attempts') != null) {
+            this.setData.scoreAttempts = parseInt(sessionStorage.getItem('risk-score-attempts'))
+            if (this.setData.scoreAttempts >= 5) {
+              this.setData.reachedLimit = true
+            }
+          }
+
           this.setData.loan = this.getLoanAmounts(100, 5000, 500)
           this.setData.term = this.getRepaymentTerms(1, 60, 6)
 
@@ -423,6 +440,10 @@
 
             // populate risk score
             this.risk.score = affordabilityScore
+            if (this.setData.scoreAttempts < 6 && this.risk.score > 0) {
+              this.setData.scoreAttempts++
+              sessionStorage.setItem('risk-score-attempts', this.setData.scoreAttempts)
+            }
 
             setTimeout(() => {
               self.risk.hasResult = true
