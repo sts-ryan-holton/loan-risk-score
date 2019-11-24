@@ -59,6 +59,8 @@ $ git clone git@github.com:sts-ryan-holton/loan-risk-score.git
 $ npm install
 ```
 
+:warning: You will need to **enable** the scraper, and provide a URL to scrape. We've provided an example that you can copy.
+
 ### :wrench: Starting
 
 ``` bash

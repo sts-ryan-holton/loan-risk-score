@@ -17,8 +17,8 @@ var searchRadius   = (args['searchRadius'] && args['searchRadius'] != '') ? pars
     scrapeInterval = (args['scrapeInterval'] && args['scrapeInterval'] != '') ? parseInt(args['scrapeInterval']) : 1000,
     pauseDelay     = (args['thresholdDelay'] && args['thresholdDelay'] != '') ? parseInt(args['thresholdDelay']) : 7500,
     pauseScraping  = false,
-    scrapeOnRun    = true,
-    urlToScrape    = 'https://www.indeed.co.uk/jobs?l=Bridgend',
+    scrapeOnRun    = false,
+    urlToScrape    = '', // example: https://www.indeed.co.uk/jobs?l=London
     jobCard        = '.jobsearch-SerpJobCard',
     jobCardSalary  = '.salarySnippet .salaryText'
 
@@ -165,7 +165,7 @@ async function scrapeWebsite(radius, pageNo) {
 
 
 // run the scraper on loop and increment details
-if (scrapeOnRun) {
+if (scrapeOnRun && urlToScrape != '') {
   setInterval(() => {
     if (!pauseScraping) {
       scrapeWebsite(searchRadius, pageNumber)
@@ -175,6 +175,9 @@ if (scrapeOnRun) {
 
 
 // run the scraper on start
-if (scrapeOnRun) {
+if (scrapeOnRun && urlToScrape != '') {
   scrapeWebsite(searchRadius, pageNumber)
 }
+
+if (urlToScrape == '') console.log('=== ERROR: You\'ll need to add a URL in: "scraper/scrape-jobs.js, line: 21" to scrape. ===')
+if (!scrapeOnRun) console.log('=== ERROR: You\'ll need to enable the scraper in: "scraper/scrape-jobs.js, line: 20". ===')
