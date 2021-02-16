@@ -15,6 +15,6 @@
     "minimist": "1.2.0",
     "osx-temperature-sensor": "1.0.4",
     "puppeteer": "2.0.0",
-    "systeminformation": "4.15.3"
+    "systeminformation": "5.3.1"
   }
 }
